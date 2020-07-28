@@ -98,7 +98,6 @@ def PlotCreator():
     GPU_load = (df1['Total size'] / df1['Devices']).unique().tolist()
     Filt_GPU_load = [(df1['Total size'] / df1['Devices'] == load) for load in GPU_load]
 
-    
     # Making Weak Scaling Plot
     a = 0
     for i in range(len(Filt_model)):
@@ -106,8 +105,8 @@ def PlotCreator():
             temp_df = df1.loc[Filt_model[i]].loc[weak_filt[iter]]
             if not temp_df.empty and len(temp_df['Devices']) > 2:
                 a += 1
-                x = temp_df['Devices']
-                y = temp_df['Speed']
+                x = temp_df.sort_values(by='Devices', ascending=True)['Devices']
+                y = temp_df.sort_values(by='Devices', ascending=True)['Speed']
                 name = temp_df['Model'].unique()
                 local_size = str(temp_df['Local size'].unique().tolist()[0])
                 make_plot_weak(x, y, name[0] + str(a), local_size)
@@ -120,56 +119,54 @@ def PlotCreator():
                 for i_z in range(len(Filt_size_z)):
                     temp_df = df1.loc[Filt_model[i]].loc[Filt_size_x[i_x]].loc[Filt_size_y[i_y]].loc[Filt_size_z[i_z]]
                     if not temp_df.empty and len(temp_df['Devices']) > 2:
-                        x = temp_df['Devices']
-                        y = temp_df['Speed']
+                        x = temp_df.sort_values(by='Devices', ascending=True)['Devices']
+                        y = temp_df.sort_values(by='Devices', ascending=True)['Speed']
                         name = temp_df['Model'].unique()
                         global_size = str(temp_df['X'].unique().tolist()[0]) + 'x' + str(
                             temp_df['Y'].unique().tolist()[0]) + 'x' + str(temp_df['Z'].unique().tolist()[0])
                         make_plot_strong(x, y, name[0] + str(a), global_size)
                         a += 1
 
-
     # Plot ghost layers
     a = 0
     for i in range(len(Filt_model)):
         for iter in range(len(Filt_GPU_load)):
             temp_df = df1.loc[Filt_model[i]].loc[Filt_GPU_load[iter]]
+            temp_df = temp_df.sort_values(by='Devices', ascending=True)
             if not temp_df.empty and len(temp_df['Devices']) > 4:
-                x = temp_df['Devices'] * temp_df['X'] * temp_df['Z'] / (temp_df['Total size']/temp_df['Devices'])
+                x = temp_df['Devices'] * temp_df['X'] * temp_df['Z'] / (temp_df['Total size'] / temp_df['Devices'])
                 y = temp_df['Speed']
                 name = temp_df['Model'].unique()
-                #total_size = str((temp_df['Total size']/df1['Devices']).unique().tolist()[0])
+                # total_size = str((temp_df['Total size']/df1['Devices']).unique().tolist()[0])
                 make_plot_ghost(x, y, name[0] + str(a))
             a += 1
 
 
 def make_plot_weak(x, y, name, size):
-    fig = plt.plot(x, y, 'gx')
-    plt.title('Weak scaling ' + size, fontsize=32)
+    fig = plt.plot(x, y, color='black', marker='x', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
     plt.xlabel('Number of GPU', fontsize=24)
     plt.ylabel('MLBUps', fontsize=24)
     plt.ylim(ymin=0)
     plt.xticks(np.arange(0, max(x) + 1, 1.0))
     plt.grid(True)
-    plt.savefig("Weak_scaling_" + name, dpi=600)
+    plt.savefig("Weak_scaling_" + name + "_" + size, dpi=600)
     plt.clf()
 
 
 def make_plot_strong(x, y, name, size):
-    fig = plt.plot(x, y, 'gx')
-    plt.title('Strong scaling ' + size, fontsize=32)
+    fig = plt.plot(x, y, color='black', marker='x', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
     plt.xlabel('Number of GPU', fontsize=24)
     plt.ylabel('MLBUps', fontsize=24)
     plt.ylim(ymin=0)
     plt.xticks(np.arange(0, max(x) + 1, 1.0))
     plt.grid(True)
-    plt.savefig("Strong_scaling_" + name, dpi=600)
+    plt.savefig("Strong_scaling_" + name + '_' + size, dpi=600)
     plt.clf()
 
 
 def make_plot_ghost(x, y, name):
     fig = plt.plot(x, y, 'gx')
-    plt.title('Speedup in function of A/V', fontsize=32)
+    plt.title('Speed in function of A/V', fontsize=32)
     plt.xlabel('A/V', fontsize=24)
     plt.ylabel('MLBUps', fontsize=24)
     plt.ylim(ymin=0)
