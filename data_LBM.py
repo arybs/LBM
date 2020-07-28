@@ -143,21 +143,31 @@ def PlotCreator():
 
 
 def make_plot_weak(x, y, name, size):
-    fig = plt.plot(x, y, color='black', marker='x', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
+    #fig = plt.plot(x, y, color='black', marker='x', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
+    fig=plt.plot(x,y, 'kx')
+    m, b  = np.polyfit(x,y,1)
+    x=np.linspace(0, np.amax(x)+1, 20)
+    plt.plot(x, m*x+b,  color='black', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
     plt.xlabel('Number of GPU', fontsize=24)
     plt.ylabel('MLBUps', fontsize=24)
     plt.ylim(ymin=0)
+    plt.xlim(xmin=0)
     plt.xticks(np.arange(0, max(x) + 1, 1.0))
     plt.grid(True)
-    plt.savefig("Weak_scaling_" + name + "_" + size, dpi=600)
+    plt.savefig("Weak_scaling_" + name + "_" + size+"_2", dpi=600)
     plt.clf()
 
 
 def make_plot_strong(x, y, name, size):
     fig = plt.plot(x, y, color='black', marker='x', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
+    #fig = plt.plot(x, y, 'kx')
+    #m, b = np.polyfit(x, y, 1)
+    #x = np.linspace(0, np.amax(x) + 1, 20)
+    #plt.plot(x, m * x + b, color='black', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
     plt.xlabel('Number of GPU', fontsize=24)
     plt.ylabel('MLBUps', fontsize=24)
     plt.ylim(ymin=0)
+    plt.xlim(xmin=0)
     plt.xticks(np.arange(0, max(x) + 1, 1.0))
     plt.grid(True)
     plt.savefig("Strong_scaling_" + name + '_' + size, dpi=600)
