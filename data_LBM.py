@@ -81,6 +81,7 @@ def PlotCreator():
     fig_size[0] = 16
     fig_size[1] = 8
     plt.rcParams["figure.figsize"] = fig_size
+    mpl.rcParams.update({'font.size': 22})
     df1 = pd.read_csv('export_dataframe.csv')
     F1 = df1['Model'].unique().tolist()
     Filt_model = [(df1['Model'] == a) for a in F1]
@@ -160,8 +161,8 @@ def make_plot_weak(x, y, name, size):
     m, b = np.polyfit(x, y, 1)
     x = np.linspace(0, np.amax(x) + 1, 20)
     plt.plot(x, m * x + b, color='black', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
-    plt.xlabel('Number of GPU', fontsize=24)
-    plt.ylabel('MLBUps', fontsize=24)
+    plt.xlabel('Number of GPU', fontsize=30)
+    plt.ylabel('MLBUps', fontsize=30)
     plt.ylim(ymin=0)
     plt.xlim(xmin=0)
     plt.xticks(np.arange(0, max(x) + 1, 1.0))
@@ -176,8 +177,8 @@ def make_plot_strong(x, y, name, size):
     # m, b = np.polyfit(x, y, 1)
     # x = np.linspace(0, np.amax(x) + 1, 20)
     # plt.plot(x, m * x + b, color='black', markevery=1, markersize=7, linestyle=":", linewidth=2, label=f'bla')
-    plt.xlabel('Number of GPU', fontsize=24)
-    plt.ylabel('MLBUps', fontsize=24)
+    plt.xlabel('Number of GPU', fontsize=30)
+    plt.ylabel('MLBUps', fontsize=30)
     plt.ylim(ymin=0)
     plt.xlim(xmin=0)
     plt.xticks(np.arange(0, max(x) + 1, 1.0))
@@ -224,9 +225,8 @@ def make_plot_ghost(df, a):
                     label=f'8 GPU')
 
     ax.legend()
-    plt.title('Speed in function of A/V', fontsize=32)
-    plt.xlabel('A/V', fontsize=24)
-    plt.ylabel('MLBUps', fontsize=24)
+    plt.xlabel('A/V', fontsize=30)
+    plt.ylabel('MLBUps', fontsize=30)
     plt.ylim(ymin=0)
     plt.grid(True)
     name = df['Model'].unique()
