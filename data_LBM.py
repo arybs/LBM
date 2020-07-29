@@ -151,7 +151,7 @@ def PlotCreator():
                 #total_size = str((temp_df['Total size']/df1['Devices']).unique().tolist()[0])
                 make_plot_ghost(x, y, name[0] + str(a))'''
                 make_plot_ghost(temp_df, str(a))
-            a += 1
+                a += 1
 
     os.chdir("./")
 
