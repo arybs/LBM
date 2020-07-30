@@ -11,6 +11,7 @@ import timeit
 def FileDataCreator():
     os.chdir('./')
     wd = os.getcwd()
+    print(wd)
     results = os.path.join(wd, 'logs')
     # Pattern for getting data from outputs
     pattern_nodes = re.compile(r'(p\d{4})\n', re.IGNORECASE)
@@ -110,33 +111,30 @@ def PlotCreator():
 
     os.chdir(dirName)
     # Making Weak Scaling Plot
-    a = 0
     for i in range(len(Filt_model)):
         for iter in range(len(weak_filt)):
             temp_df = df1.loc[Filt_model[i]].loc[weak_filt[iter]]
             if not temp_df.empty and len(temp_df['Devices']) > 2:
-                a += 1
                 x = temp_df.sort_values(by='Devices', ascending=True)['Devices']
                 y = temp_df.sort_values(by='Devices', ascending=True)['Speed']
                 name = temp_df['Model'].unique()
                 local_size = str(temp_df['Local size'].unique().tolist()[0])
-                make_plot_weak(x, y, name[0] + str(a), local_size)
+                make_plot_weak(x, y, name[0], local_size)
 
     # Making Strong Scaling Plot
-    a = 0
     for i in range(len(Filt_model)):
         for i_x in range(len(Filt_size_x)):
             for i_y in range(len(Filt_size_y)):
                 for i_z in range(len(Filt_size_z)):
                     temp_df = df1.loc[Filt_model[i]].loc[Filt_size_x[i_x]].loc[Filt_size_y[i_y]].loc[Filt_size_z[i_z]]
-                    if not temp_df.empty and len(temp_df['Devices']) > 2:
+                    if not temp_df.empty and len(temp_df['Devices']) > 3:
                         x = temp_df.sort_values(by='Devices', ascending=True)['Devices']
                         y = temp_df.sort_values(by='Devices', ascending=True)['Speed']
                         name = temp_df['Model'].unique()
                         global_size = str(temp_df['X'].unique().tolist()[0]) + 'x' + str(
                             temp_df['Y'].unique().tolist()[0]) + 'x' + str(temp_df['Z'].unique().tolist()[0])
-                        make_plot_strong(x, y, name[0] + str(a), global_size)
-                        a += 1
+                        make_plot_strong(x, y, name[0], global_size)
+
 
     # Plot ghost layers
     a = 0
@@ -167,7 +165,7 @@ def make_plot_weak(x, y, name, size):
     plt.xlim(xmin=0)
     plt.xticks(np.arange(0, max(x) + 1, 1.0))
     plt.grid(True)
-    plt.savefig("Weak_scaling_" + name + "_" + size + "_2", dpi=600)
+    plt.savefig("Weak_scaling_" + name + "_" + size, dpi=600)
     plt.clf()
 
 
