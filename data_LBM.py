@@ -11,14 +11,13 @@ import timeit
 def FileDataCreator():
     os.chdir('./')
     wd = os.getcwd()
-    print(wd)
     results = os.path.join(wd, 'logs')
     # Pattern for getting data from outputs
     pattern_nodes = re.compile(r'(p\d{4})\n', re.IGNORECASE)
     pattern_model = re.compile(r'model\: (\w+)', re.I)
     pattern_size = re.compile(r'Global lattice size: (\d+)x(\d+)x(\d+)', re.I)
     pattern_local_size = re.compile(r'Local lattice size: (\d+)x(\d+)x(\d+)', re.I)
-    # pattern_devices = re.compile(r'Selecting device', re.I)
+    #pattern_devices = re.compile(r'Selecting device', re.I)
     pattern_devices = re.compile(r'icm.edu.pl', re.I)
     pattern_time = re.compile(r'Total duration: (\d+\.\d+)', re.I)
     pattern_speed = re.compile(r'(\d+\.\d+) MLBUps', re.I)
@@ -212,15 +211,22 @@ def make_plot_ghost(df, a):
         x3 = temp_df['A/V']
         y3 = temp_df['Speed']
 
-        line3 = ax.plot(x3, y3, color="black", marker="<", markevery=1, markersize=7, linestyle="-", linewidth=2,
+        line3 = ax.plot(x3, y3, color="black", marker="<", markevery=1, markersize=7, linestyle="-.", linewidth=2,
                     label=f'4 GPU')
 
     temp_df = df2.loc[df2['Devices'] == 8]
-    if not temp_df.empty and len(temp_df['Devices']) > 4:
+    if not temp_df.empty:
         x4 = temp_df['Devices'] * temp_df['X'] * temp_df['Z'] / (temp_df['Total size'] / temp_df['Devices'])
         y4 = temp_df['Speed']
-        line4 = ax.plot(x4, y4, color="black", marker="v", markevery=1, markersize=7, linestyle=".", linewidth=2,
+        line4 = ax.plot(x4, y4, color="black", marker="v", markevery=1, markersize=7, linestyle="--", linewidth=2,
                     label=f'8 GPU')
+
+    temp_df = df2.loc[df2['Devices'] == 16]
+    if not temp_df.empty:
+        x5 = temp_df['Devices'] * temp_df['X'] * temp_df['Z'] / (temp_df['Total size'] / temp_df['Devices'])
+        y5 = temp_df['Speed']
+        line5 = ax.plot(x5, y5, color="black", marker="s", markevery=1, markersize=7, linestyle="-", linewidth=2,
+                        label=f'16 GPU')
 
     ax.legend()
     plt.xlabel('A/V', fontsize=30)
@@ -240,6 +246,7 @@ def __main__():
         PlotCreator()
     else:
         FileDataCreator()
+        PlotCreator()
 
     t1 = float(timeit.default_timer() - start)
     print("Czas :", str(t1))
