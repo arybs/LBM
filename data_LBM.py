@@ -17,8 +17,8 @@ def FileDataCreator():
     pattern_model = re.compile(r'model\: (\w+)', re.I)
     pattern_size = re.compile(r'Global lattice size: (\d+)x(\d+)x(\d+)', re.I)
     pattern_local_size = re.compile(r'Local lattice size: (\d+)x(\d+)x(\d+)', re.I)
-    #pattern_devices = re.compile(r'Selecting device', re.I)
-    pattern_devices = re.compile(r'icm.edu.pl', re.I)
+    pattern_devices = re.compile(r'Selecting device', re.I)
+    #pattern_devices = re.compile(r'icm.edu.pl', re.I)
     pattern_time = re.compile(r'Total duration: (\d+\.\d+)', re.I)
     pattern_speed = re.compile(r'(\d+\.\d+) MLBUps', re.I)
 
@@ -40,7 +40,7 @@ def FileDataCreator():
 
         # need to capture data to a list
         Name = txtFile
-        Speed = np.mean(np.array([float(match.group(1)) for match in matches_speed])[-100:])
+        Speed = np.mean(np.array([float(match.group(1)) for match in matches_speed])[-50:])
         for match in matches_model:
             Model = match.group(1)
         if pattern_time.search(content) == None:
@@ -107,13 +107,13 @@ def PlotCreator():
         print("Directory ", dirName, " Created ")
     else:
         print("Directory ", dirName, " already exists")
-
     os.chdir(dirName)
+
     # Making Weak Scaling Plot
     for i in range(len(Filt_model)):
         for iter in range(len(weak_filt)):
             temp_df = df1.loc[Filt_model[i]].loc[weak_filt[iter]]
-            if not temp_df.empty and len(temp_df['Devices']) > 2:
+            if not temp_df.empty and len(temp_df['Devices']) > 3:
                 x = temp_df.sort_values(by='Devices', ascending=True)['Devices']
                 y = temp_df.sort_values(by='Devices', ascending=True)['Speed']
                 name = temp_df['Model'].unique()
